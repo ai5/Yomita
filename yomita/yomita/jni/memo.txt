@@ -1,0 +1,20 @@
+
+ÅESSE4.2 AVXÇ†ÇË
+
+
+info depth 20 seldepth 33 multipv 1 score cp -1287 nodes 9724214 nps 526031 hashfull 972 time 18486 pv 4b3b 4f4e 3b3d 4e4d P*4g 5h4g 3d4d P*4b 4a4b 7g5e 4d4g+ 4h4g 4b5c R*2c 5a6b 4g4a+ P*5b P*5d 5c5d 2c6c+ 6b6c 4a6a P*6b G*6d 5d6d 6e6d 6c5d G*4d 5d6e 6a7a
+bestmove 4b3b ponder 4f4e
+
+===========================
+Total time (ms) : 18532
+Nodes searched  : 9724214
+Nodes/second    : 524725
+
+ÅESSEÇ»Çµ
+info depth 20 seldepth 33 multipv 1 score cp -1287 nodes 9724214 nps 489441 hashfull 972 time 19868 pv 4b3b 4f4e 3b3d 4e4d P*4g 5h4g 3d4d P*4b 4a4b 7g5e 4d4g+ 4h4g 4b5c R*2c 5a6b 4g4a+ P*5b P*5d 5c5d 2c6c+ 6b6c 4a6a P*6b G*6d 5d6d 6e6d 6c5d G*4d 5d6e 6a7a
+bestmove 4b3b ponder 4f4e
+
+===========================
+Total time (ms) : 19895
+Nodes searched  : 9724214
+Nodes/second    : 488776

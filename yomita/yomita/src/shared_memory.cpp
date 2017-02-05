@@ -27,7 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <fstream>
 #include <iostream>
+#if defined(_MSC_VER)
 #include <windows.h>
+#endif
 #include <codecvt>
 #include "usi.h"
 #include "eval_kppt.h"
@@ -37,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Eval
 {
     extern void loadSub();
-
+#if defined(_MSC_VER)
     void load()
     {
         if (!(bool)USI::Options["EvalShare"])
@@ -82,6 +84,14 @@ namespace Eval
             ReleaseMutex(h_mutex);
         }
     }
+#else
+	void load()
+	{
+        auto shared = new SharedEval();
+        et.set(shared);
+		loadSub();
+	}
+#endif
 } // namespace Eval;
 
 #endif

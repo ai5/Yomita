@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <cassert>
 
+#if defined(_MSC_VER)
 // MSVCコンパイラから出るうっとうしい警告を無効にする。
 #pragma warning(disable: 4800) // 値の強制的なbool型への変換
 #pragma warning(disable: 4267) // unsigned と signedの比較
@@ -40,6 +41,9 @@ typedef   signed __int32  int32_t;
 typedef unsigned __int32 uint32_t;
 typedef   signed __int64  int64_t;
 typedef unsigned __int64 uint64_t;
+#elif defined(__GNUC__)
+#define __assume(cond) do { if (!(cond)) __builtin_unreachable(); } while (0)
+#endif
 
 // Debug時に定義するとassertが無効になり、Release時に定義するとassertが有効になる。
 //#define SPEED_DEBUG
@@ -67,11 +71,16 @@ typedef unsigned __int64 uint64_t;
 #define USE_POPCNT
 #define HAVE_SSE42
 #define HAVE_SSE4
-#define HAVE_BMI2
+// #define HAVE_BMI2
+#endif
+
+#ifdef HAVE_SSE42
+#define HAVE_SSE4
+#define USE_POPCNT
 #endif
 
 #if !defined(IS_64BIT)
-//#define HAVE_SSE2
+#define HAVE_SSE2
 #endif
 
 #if defined (HAVE_BMI2)
@@ -88,4 +97,13 @@ typedef unsigned __int64 uint64_t;
 #include <emmintrin.h>
 #endif
 
+#if defined(IS_ARM)
+#include "arm_neon.h"
+#endif
+
+#if defined(__GNUC__)
+#define FORCE_INLINE __attribute__((always_inline)) inline
+#else
 #define FORCE_INLINE __forceinline
+#endif
+

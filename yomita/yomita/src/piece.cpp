@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <string>
+#include <iostream>
 #include "piece.h"
 #include "piecescore.h"
 #include "bitboard.h"

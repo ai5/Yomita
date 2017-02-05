@@ -56,10 +56,51 @@ private:
     std::vector<T*> container;
 };
 
+#if defined(_MSC_VER) && !defined(__INTEL_COMPILER) && defined(_WIN64)
+#if defined(IS_64BIT)
+#if defined(_MSC_VER) && !defined(__INTEL_COMPILER)
+// 1である最下位のbitのbit位置を得る。0を渡してはならない。
+FORCE_INLINE int LSB32(uint32_t v) { unsigned long index; _BitScanForward(&index, v); return index; }
+FORCE_INLINE int LSB64(uint64_t v) { unsigned long index; _BitScanForward64(&index, v); return index; }
+
+// 1である最上位のbitのbit位置を得る。0を渡してはならない。
+FORCE_INLINE int MSB32(uint32_t v) { unsigned long index; _BitScanReverse(&index, v); return index; }
+FORCE_INLINE int MSB64(uint64_t v) { unsigned long index; _BitScanReverse64(&index, v); return index; }
+#else
+// 1である最下位のbitのbit位置を得る。0を渡してはならない。
+inline int LSB32(uint32_t v) { return __builtin_ctz(v); }
+inline int LSB64(uint64_t v) { return __builtin_ctzll(v); }
+
+// 1である最上位のbitのbit位置を得る。0を渡してはならない。
+inline int MSB32(uint32_t v) { return 31 - __builtin_clz(v); }
+inline int MSB64(uint64_t v) { return 63 - __builtin_clzll(v); }
+#endif
+
+#else
+// 32bit環境では64bit版を要求されたら2回に分けて実行。
+FORCE_INLINE int LSB32(uint32_t v) { unsigned long index; _BitScanForward(&index, v); return index; }
+FORCE_INLINE int LSB64(uint64_t v) { return uint32_t(v) ? LSB32(uint32_t(v)) : 32 + LSB32(uint32_t(v >> 32)); }
+
+FORCE_INLINE int MSB32(uint32_t v) { unsigned long index; _BitScanReverse(&index, v); return index; }
+FORCE_INLINE int MSB64(uint64_t v) { return uint32_t(v >> 32) ? 32 + MSB32(uint32_t(v >> 32)) : MSB32(uint32_t(v)); }
+#endif
+#elif defined(__GNUC__) && ( defined(__i386__) || defined(__x86_64__) || defined(__ANDROID__))
+
+FORCE_INLINE int LSB32(const uint32_t v) { return __builtin_ctzll(v); }
+FORCE_INLINE int LSB64(const uint64_t v) { return __builtin_ctzll(v); }
+FORCE_INLINE int MSB32(const uint32_t v) { return 63 - __builtin_clzll(v); }
+FORCE_INLINE int MSB64(const uint64_t v) { return 63 - __builtin_clzll(v); }
+
+#endif
+
+
 // 64bitのうち、LSBの位置を返す。
 inline int bsf64(const uint64_t mask)
 {
     assert(mask != 0);
+#if defined(__GNUC__)
+	return LSB64(mask);
+#else
 #if defined USE_BSF
     unsigned long index;
     _BitScanForward64(&index, mask);
@@ -76,11 +117,15 @@ inline int bsf64(const uint64_t mask)
     const uint32_t old = static_cast<uint32_t>((tmp & 0xffffffff) ^ (tmp >> 32));
     return BitTable[(old * 0x783a9b23) >> 26];
 #endif
+#endif
 }
 
 inline int bsr64(const uint64_t mask)
 {
     assert(mask != 0);
+#if defined(__GNUC__)
+	return MSB64(mask);
+#else
 #if defined USE_BSF
     unsigned long index;
     _BitScanReverse64(&index, mask);
@@ -93,10 +138,14 @@ inline int bsr64(const uint64_t mask)
     }
     return 0;
 #endif
+#endif
 }
 
 #if defined USE_POPCNT
 #define popCount(v) (int)_mm_popcnt_u64(v)
+#else
+#ifdef IS_ARM
+#define popCount(v) __builtin_popcountll(v)
 #else
     //64bitのうち、たっているビットの数を返す。(popcntの代わり)
     inline int popCount(uint64_t v) 
@@ -108,6 +157,7 @@ inline int bsr64(const uint64_t mask)
         count = (count & 0x0000ffff0000ffffULL) + ((count >> 16) & 0x0000ffff0000ffffULL);
         return (int)((count & 0x00000000ffffffffULL) + ((count >> 32) & 0x00000000ffffffffULL));
     }
+#endif
 #endif
 
 #if defined HAVE_BMI2

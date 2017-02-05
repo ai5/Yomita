@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "genmove.h"
 #include "search.h"
 
+#if defined(__GNUC__)
+#include <cstring> // std::memset
+#endif
+
 // Statsは指し手の統計を保存する。テンプレートパラメータに応じてクラスはhistoryとcountermoveを保存することができる。
 // Historyのレコード(現在の探索中にどれくらいの頻度で異なるmoveが成功or失敗したか)は、
 // 手のオーダリングの決定とreductionに利用される。

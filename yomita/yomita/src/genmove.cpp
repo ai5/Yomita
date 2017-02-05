@@ -1253,26 +1253,6 @@ namespace
         return mlist;
     }
 
-
-    // 玉が5段目より上にいるならHIGH盤面、5段目を含めて下にいるならLOW盤面を使用する。
-    template <Turn T, MoveType MT>
-    MoveStack* generateCheckRBB(MoveStack* mlist, const Board& b)
-    {
-        static_assert(MT == QUIET_CHECKS || MT == NEAR_CHECK, "");
-        const Index T_HIGH = T == BLACK ? HIGH : LOW;
-        const Index T_LOW = T == BLACK ? LOW : HIGH;
-        const Square ksq = b.kingSquare(~T);
-        const Rank k = rankOf(ksq);
-        const bool is_behind = isBehind(BLACK, RANK_5, k);
-
-#ifdef MATE3PLY
-        if (MT == NEAR_CHECK)
-            return is_behind ? generateNearCheck<T, LOW>(mlist, b, ksq) : generateNearCheck<T, HIGH>(mlist, b, ksq);
-        else
-#endif
-            return is_behind ? generateSpeedCheck<T, LOW>(mlist, b, ksq) : generateSpeedCheck<T, HIGH>(mlist, b, ksq);
-    };
-
     // 駒を取らない王手生成。
     template <Turn T, Index TK>
     MoveStack* generateSpeedCheck(MoveStack* mlist, const Board& b, const Square ksq)
@@ -2022,6 +2002,26 @@ namespace
         return mlist;
     }
 #endif
+
+    // 玉が5段目より上にいるならHIGH盤面、5段目を含めて下にいるならLOW盤面を使用する。
+    template <Turn T, MoveType MT>
+    MoveStack* generateCheckRBB(MoveStack* mlist, const Board& b)
+    {
+        static_assert(MT == QUIET_CHECKS || MT == NEAR_CHECK, "");
+        const Index T_HIGH = T == BLACK ? HIGH : LOW;
+        const Index T_LOW = T == BLACK ? LOW : HIGH;
+        const Square ksq = b.kingSquare(~T);
+        const Rank k = rankOf(ksq);
+        const bool is_behind = isBehind(BLACK, RANK_5, k);
+
+#ifdef MATE3PLY
+        if (MT == NEAR_CHECK)
+            return is_behind ? generateNearCheck<T, LOW>(mlist, b, ksq) : generateNearCheck<T, HIGH>(mlist, b, ksq);
+        else
+#endif
+            return is_behind ? generateSpeedCheck<T, LOW>(mlist, b, ksq) : generateSpeedCheck<T, HIGH>(mlist, b, ksq);
+    };
+	
 }// namespace
 
 template <MoveType MT, Turn T, bool ALL> MoveStack* generate(MoveStack* mlist, const Board& b)

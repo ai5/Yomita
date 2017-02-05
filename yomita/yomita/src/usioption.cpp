@@ -115,7 +115,7 @@ Option::Option(bool v, Fn* f) : type_("check"), min_(0), max_(0), on_change_(f)
 }
 Option::Option(int v, int minv, int maxv, Fn* f) : type_("spin"), min_(minv), max_(maxv), on_change_(f)
 {
-    default_value_ = current_value_ = std::to_string((_Longlong)v);
+    default_value_ = current_value_ = std::to_string(v);
 }
 
 // オプションに値をセットする。その際、範囲チェックも行う

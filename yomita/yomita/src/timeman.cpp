@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "timeman.h"
 #include "usi.h"
+#include <complex>
 
 using namespace USI;
 TimeManagement Time;

@@ -28,7 +28,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0601
 #endif
+
+#if defined _MSC_VER
 #include <windows.h>
+#elif defined __GNUC__
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
 
 extern "C"
 {
@@ -225,6 +231,9 @@ std::string path(const std::string& folder, const std::string& filename)
 
 void mkdir(std::string dir)
 {
+#if defined(__GNUC__)
+	// 未実装
+#else
     std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
 
     if (_wmkdir(cv.from_bytes(dir).c_str()) == -1)
@@ -234,4 +243,5 @@ void mkdir(std::string dir)
         else if (errno == ENOENT)
             std::cout << "パスが見つかりませんでした。" << std::endl;
     }
+#endif
 }

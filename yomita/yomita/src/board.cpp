@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <sstream>
 #include <algorithm>
+#include <cstring>
 #include "board.h"
 #include "move.h"
 #include "genmove.h"
@@ -2394,7 +2395,7 @@ bool Board::verify() const
     failed_step++;
 
     // step 1
-
+	{
     int p_max_bb[PIECETYPE_MAX] = { 0 };
 
     // ビットボードから
@@ -2422,6 +2423,7 @@ bool Board::verify() const
         p_max_bb[KING] != 2)
         goto Failed;
 
+	}
     failed_step++;
 
     // step 3
@@ -2512,13 +2514,14 @@ bool Board::verify() const
     // step 10
 
     // 相手玉を取れないことを確認
-    const Turn self = turn();
-    const Turn enemy = ~self;
-    const Square king_square = kingSquare(enemy);
+	{
+		const Turn self = turn();
+		const Turn enemy = ~self;
+		const Square king_square = kingSquare(enemy);
 
-    if (attackers(self, king_square))
-        goto Failed;
-
+		if (attackers(self, king_square))
+			goto Failed;
+	}
     failed_step++;
 
     // step 11
@@ -2570,11 +2573,13 @@ bool Board::verify() const
     failed_step++;
 
     // step 14 駒番号に対するBonaPieceの整合性のチェック
+	{
     auto list_fb = evalList()->pieceListFb();
 
     for (PieceNo no = PIECE_NO_PAWN; no < PIECE_NO_NB; no++)
         if (evalList()->pieceNoOf(list_fb[no]) != no)
             goto Failed;
+	}
 #endif
 
     return true;

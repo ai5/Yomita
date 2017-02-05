@@ -316,7 +316,7 @@ namespace Eval
             sum = st->sum;
             goto CALC_DIFF_END;
         }
-
+		{
         auto now = st;
         auto prev = st->previous;
 
@@ -567,7 +567,7 @@ namespace Eval
         }
 
         now->sum = sum;
-
+	}
         // 差分計算終わり
     CALC_DIFF_END:
         sum.p[2][0] += b.state()->material * FV_SCALE;

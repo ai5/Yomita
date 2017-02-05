@@ -62,6 +62,7 @@ public:
     {
         assert(type_ == "check" || type_ == "spin");
         return (type_ == "spin" ? stoi(current_value_) : current_value_ == "true");
+		return (type_ == "spin" ? stoi(current_value_) : current_value_ == "true");
     }
 
     // string型への変換子。current_value_の文字列がそのまま返る。  
@@ -170,3 +171,5 @@ namespace USI
     std::string score(Score s);
     std::string pv(const Board& b, Depth depth, Score alpha, Score beta);
 }
+
+std::ostream& operator<<(std::ostream& os, const OptionsMap& om);
