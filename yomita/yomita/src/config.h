@@ -50,7 +50,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // 縦型Squareで作られたハフマン化sfenを読み込みたいときに定義する。
 // 読み込み方が対応するだけで、生成には対応しない。
-//#define GENERATED_SFEN_BY_FILESQ
+#if !defined(IS_64BIT) || defined(__ANDROID__)
+#define GENERATED_SFEN_BY_FILESQ
+#endif
 
 // なんらかの評価関数バイナリを使う場合のdefine。
 #if defined EVAL_KPP || defined EVAL_KPPT || defined EVAL_PPT

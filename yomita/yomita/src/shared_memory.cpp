@@ -90,7 +90,8 @@ namespace Eval
         auto shared = new SharedEval();
         et.set(shared);
 		loadSub();
-	}
+		SYNC_COUT << "info string use non-shared eval memory" << SYNC_ENDL;
+}
 #endif
 } // namespace Eval;
 

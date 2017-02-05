@@ -22,7 +22,7 @@ ifeq ($(TARGET_ARCH_ABI),arm64-v8a)
 endif
 
 ifeq ($(TARGET_ARCH_ABI),x86_64)
-  ARCH_DEF += -DIS_64BIT -DHAVE_SSE4 -msse4.2
+  ARCH_DEF += -DIS_64BIT
 endif
 
 

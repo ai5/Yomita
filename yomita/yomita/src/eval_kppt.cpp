@@ -90,7 +90,7 @@ namespace Eval
         }
 
 
-#ifndef IS_64BIT
+#if !defined(IS_64BIT) || defined(__ANDROID__)
 
         // 縦→横
         int f2r[fe_end];

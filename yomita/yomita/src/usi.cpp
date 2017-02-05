@@ -296,7 +296,9 @@ Move USI::toMove(const Board& b, std::string str)
 void USI::loop(int argc, char** argv)
 {
     // デフォルトでログを取る。
+#if !defined(__ANDROID__)
     startLogger(true);
+#endif
 
 #if !defined IS_64BIT
     // x86環境では置換表の確保が行われた後に評価関数を読み込むとbad_allocを起こすことがある。
