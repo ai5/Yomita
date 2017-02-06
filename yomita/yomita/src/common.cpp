@@ -206,6 +206,13 @@ int readAllLines(std::string filename, std::vector<std::string>& lines)
     {
         std::string line;
         getline(fs, line);
+
+		// 改行を簡易的に除去
+		if (line.length() != 0 && (line[line.length() - 1] == '\r' || line[line.length() - 1] == '\n'))
+		{
+			line.resize(line.length() - 1);
+		}
+
         if (line.length())
             lines.push_back(line);
     }

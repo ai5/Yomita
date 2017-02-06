@@ -349,7 +349,7 @@ void Thread::search()
 
     // やねうら王を参考に、将棋所のコンソールが詰まるのを防ぐ。
     int last_info_time = 0;
-    const int pv_interval = 1000;
+    const int pv_interval = 300;
 
     if (main_thread)
     {
